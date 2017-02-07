@@ -44,9 +44,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.sonar.java.DefaultJavaResourceLocator;
 import org.sonar.java.JavaClasspath;
-import org.sonar.plugins.java.api.JavaResourceLocator;
 
 import com.google.common.collect.ImmutableList;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -62,7 +60,7 @@ public class CheckstyleExecutorTest {
         CheckstyleConfiguration conf = mockConf();
         CheckstyleAuditListener listener = mockListener();
         CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener,
-                createJavaResourceLocator());
+                createJavaClasspath());
         executor.execute();
 
         verify(listener, times(1)).auditStarted(any(AuditEvent.class));
@@ -91,7 +89,7 @@ public class CheckstyleExecutorTest {
         thrown.expectMessage("Can not execute Checkstyle");
         CheckstyleConfiguration conf = mockConf();
         CheckstyleExecutor executor = new CheckstyleExecutor(conf, null,
-                createJavaResourceLocator());
+                createJavaClasspath());
         executor.execute();
     }
 
@@ -101,14 +99,14 @@ public class CheckstyleExecutorTest {
         thrown.expectMessage("Fail to create the project classloader. "
                 + "Classpath element is invalid: htp://aa");
         CheckstyleExecutor executor = new CheckstyleExecutor(null, null,
-                createJavaResourceLocator());
+                createJavaClasspath());
         executor.getUrl(new URI("htp://aa"));
     }
 
-    private static JavaResourceLocator createJavaResourceLocator() {
+    private static JavaClasspath createJavaClasspath() {
         JavaClasspath javaClasspath = mock(JavaClasspath.class);
         when(javaClasspath.getElements()).thenReturn(ImmutableList.of(new File(".")));
-        return new DefaultJavaResourceLocator(null, javaClasspath, null);
+        return javaClasspath;
     }
 
     @Test
@@ -124,7 +122,7 @@ public class CheckstyleExecutorTest {
             when(conf.getTargetXmlReport()).thenReturn(report);
             CheckstyleAuditListener listener = mockListener();
             CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener,
-                    createJavaResourceLocator());
+                    createJavaClasspath());
             executor.execute();
 
             Assert.assertTrue(report.exists());
@@ -148,7 +146,7 @@ public class CheckstyleExecutorTest {
         when(conf.getTargetXmlReport()).thenReturn(null);
         CheckstyleAuditListener listener = mockListener();
         CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener,
-                createJavaResourceLocator());
+                createJavaClasspath());
         executor.execute();
 
         Assert.assertFalse(report.exists());

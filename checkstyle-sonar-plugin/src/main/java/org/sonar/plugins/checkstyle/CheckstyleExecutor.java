@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.utils.TimeProfiler;
-import org.sonar.plugins.java.api.JavaResourceLocator;
+import org.sonar.java.JavaClasspath;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.puppycrawl.tools.checkstyle.Checker;
@@ -49,13 +49,13 @@ public class CheckstyleExecutor implements BatchExtension {
 
     private final CheckstyleConfiguration configuration;
     private final CheckstyleAuditListener listener;
-    private final JavaResourceLocator javaResourceLocator;
+    private final JavaClasspath javaClasspath;
 
     public CheckstyleExecutor(CheckstyleConfiguration configuration,
-            CheckstyleAuditListener listener, JavaResourceLocator javaResourceLocator) {
+            CheckstyleAuditListener listener, JavaClasspath javaClasspath) {
         this.configuration = configuration;
         this.listener = listener;
-        this.javaResourceLocator = javaResourceLocator;
+        this.javaClasspath = javaClasspath;
     }
 
     /**
@@ -135,7 +135,7 @@ public class CheckstyleExecutor implements BatchExtension {
     }
 
     private URLClassLoader createClassloader() {
-        Collection<File> classpathElements = javaResourceLocator.classpath();
+        Collection<File> classpathElements = javaClasspath.getElements();
         List<URL> urls = new ArrayList<>(classpathElements.size());
         for (File file : classpathElements) {
             urls.add(getUrl(file.toURI()));

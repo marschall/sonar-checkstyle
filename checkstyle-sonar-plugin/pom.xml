@@ -30,15 +30,17 @@
     <!-- till https://github.com/checkstyle/sonar-checkstyle/issues/40 -->
     <dependency>
       <groupId>org.sonarsource.java</groupId>
-      <artifactId>sonar-java-plugin</artifactId>
-      <type>sonar-plugin</type>
+      <artifactId>java-squid</artifactId>
       <version>${sonar-java.version}</version>
-      <scope>provided</scope>
       <!-- to avoid 4.5.1 api pickup -->
       <exclusions>
         <exclusion>
           <groupId>org.codehaus.sonar</groupId>
           <artifactId>sonar-plugin-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.sonar</groupId>
+          <artifactId>sonar-colorizer</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

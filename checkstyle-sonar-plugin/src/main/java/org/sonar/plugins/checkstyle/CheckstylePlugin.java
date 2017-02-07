@@ -27,6 +27,7 @@ import org.sonar.api.PropertyType;
 import org.sonar.api.SonarPlugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
+import org.sonar.java.JavaClasspath;
 
 public final class CheckstylePlugin extends SonarPlugin {
 
@@ -60,6 +61,9 @@ public final class CheckstylePlugin extends SonarPlugin {
                                 .name("Generate XML Report").type(PropertyType.BOOLEAN).hidden()
                                 .build(),
 
+                        // since we no longer depend on sonar-java-plugin but only
+                        // java-squid we have to manually register this component
+                        JavaClasspath.class,
                         CheckstyleSensor.class, CheckstyleConfiguration.class,
                         CheckstyleExecutor.class, CheckstyleAuditListener.class,
                         CheckstyleProfileExporter.class, CheckstyleProfileImporter.class,
